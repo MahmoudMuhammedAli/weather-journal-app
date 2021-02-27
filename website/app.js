@@ -31,7 +31,7 @@ const getAPI = async (url, zip, key) => {
                 }
                 console.log(entry)
                 postData('/all', entry)
-                updateUI(entry);
+                asyncUpdateUi();
             })
 
     });
@@ -55,13 +55,14 @@ const postData = async (url = '', data = {}) => {
         console.log("error", error);
     }
 };
-// updating the ui 
-const updateUI = async (entry) => {
-    try {
-        document.getElementById('temp').innerHTML = `Temperature: ${entry.temp}`
-        document.getElementById('date').innerHTML = `Date: ${entry.date}`
-        document.getElementById('content').innerHTML = `Feelings: ${entry.response}`
-    } catch (error) {
-        console.error(error)
-    }
+// updating the ui using async GET to get fetch the data
+
+const asyncUpdateUi = async()=>{
+    const request = await fetch ('/all')
+    try{
+        const Data = await request.json();
+        document.getElementById('temp').innerHTML = `Temperature: ${Data[0].temp}`
+        document.getElementById('date').innerHTML = `Date: ${Data[0].date}`
+        document.getElementById('content').innerHTML = `Feelings: ${Data[0].response}`
+    }catch(error){console.log("error", error)}
 }
